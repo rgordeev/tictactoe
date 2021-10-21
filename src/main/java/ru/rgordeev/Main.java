@@ -34,6 +34,10 @@ public class Main {
             String input = in.nextLine();
             String[] data = input.split(" ");
             Integer[] coords = mapToInt(data);
+            if (!validate(field, coords)) {
+                System.out.println("Введите координаты снова. Предыдущие данные некорректны");
+                continue;
+            }
             if (turn) {
                 field[coords[0]][coords[1]] = 1;
                 turn = false;
@@ -75,6 +79,19 @@ public class Main {
             result[i] = field[i][j];
         }
         return result;
+    }
+
+    private static boolean validate(int[][] field, Integer[] coords) {
+        if (coords[0] < 0 || coords[0] > 2) {
+            return false;
+        }
+        if (coords[1] < 0 || coords[1] > 2) {
+            return false;
+        }
+        if (field[coords[0]][coords[1]] != 0) {
+            return false;
+        }
+        return true;
     }
 
     private static int[] extractMainDiag(int[][] field) {
