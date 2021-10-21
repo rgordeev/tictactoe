@@ -30,16 +30,22 @@ public class Main {
         init();
         printField();
         Scanner in = new Scanner(System.in);
-        for (int i = 0; i < 10; i++) {
+        while(!xWin(field) && !oWin(field) && !nobodyWon(field)) {
             String input = in.nextLine();
             String[] data = input.split(" ");
             Integer[] coords = mapToInt(data);
             if (turn) {
                 field[coords[0]][coords[1]] = 1;
                 turn = false;
+                if (xWin(field)) {
+                    System.out.println("X WON");
+                }
             } else {
                 field[coords[0]][coords[1]] = 2;
                 turn = true;
+                if (oWin(field)) {
+                    System.out.println("O WON");
+                }
             }
             printField();
         }
@@ -85,5 +91,53 @@ public class Main {
             result[i] = field[i][2 - i];
         }
         return result;
+    }
+
+    private static boolean allInArray(int[] a, int template) {
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] != template) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isAWinner(int[][] field, int player) {
+        for (int i = 0; i < 3; i++) {
+            if (allInArray(extractRow(field, i), player)) {
+                return true;
+            }
+        }
+        for (int j = 0; j < 3; j++) {
+            if (allInArray(extractColumn(field, j), player)) {
+                return true;
+            }
+        }
+        if (allInArray(extractMainDiag(field), player)) {
+            return true;
+        }
+        if (allInArray(extractSlaveDiag(field), player)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean xWin(int[][] field) {
+        return isAWinner(field, 1);
+    }
+
+    private static boolean oWin(int[][] field) {
+        return isAWinner(field, 2);
+    }
+
+    private static boolean nobodyWon(int[][] field) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (field[i][j] == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
